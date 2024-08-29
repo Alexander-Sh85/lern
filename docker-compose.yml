@@ -16,5 +16,20 @@ services:
         limits:
           cpus: 0.50
           memory: 1G 
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "--quiet", "http://localhost:5000/nginx_status"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 60s 
+    restart: always
+    # environment:
+    #   - SCRAPE_URI=http://proxy:5000/nginx_status
+    #   - NGINX_RETRIES=5
+    #   - DATABASE_URL: "postgresql://itana-catalog:cCjE81IRFJ@rc1c-5ncryhijazm3o3o6.mdb.yandexcloud.net:6432/nrava"
+    # external_links:
+    #   - nginx_proxy:api.nrava.ru
+    # env_file:
+    #   - ./nrava_secrets.yaml  
     # depends_on:
     #   - mysql

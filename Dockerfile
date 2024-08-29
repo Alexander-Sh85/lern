@@ -1,20 +1,21 @@
-FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18 
-# as builder
+FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18  
+# as build это для мультистейджа
 
-WORKDIR /var/www
-# RUN apk update && apk upgrade
+# Чистим кэш в одном слое (rm -r /var/cache/apk/* or --no-cache or apk cache clean)
+RUN apk update && apk upgrade && rm -r /var/cache/apk/*
 
-COPY index.html /var/www/
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/index.html
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-# FROM nginx:latest
+# FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18
 
-# RUN adduser -D testuser
-# USER testuser
-
-# WORKDIR /app
-
-# EXPOSE 80
+# COPY --from=build /usr/share/nginx/html /usr/share/nginx/html
+# COPY --from=build /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
+
+RUN adduser -D -H test
+WORKDIR /app
+
+# USER test
+# EXPOSE 80

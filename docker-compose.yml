@@ -23,10 +23,12 @@ services:
       retries: 3
       start_period: 60s 
     restart: always
-    networks:
-            - br_all
+    # networks:
+    #         - br_all
+    # external_links:
+    #   - localhost        
     # environment:
-    #   - SCRAPE_URI=http://proxy:5000/nginx_status
+    #   - SCRAPE_URI=http://nginx:5000/nginx_status
     #   - NGINX_RETRIES=5
     #   - DATABASE_URL: "postgresql://itana-catalog:cCjE81IRFJ@rc1c-5ncryhijazm3o3o6.mdb.yandexcloud.net:6432/nrava"
     # external_links:
@@ -43,13 +45,15 @@ services:
     depends_on:
       - nginx
     environment:
-      - SCRAPE_URI=http://proxy:5000/nginx_status
+      - SCRAPE_URI=http://nginx:5000/nginx_status
       - NGINX_RETRIES=5
     ports:
-      - 9113:9113  
-networks:
-    br_all:
-        driver: bridge
+      - 9113:9113 
+    # networks:
+    #         - br_all   
+# networks:
+#     br_all:
+#         driver: bridge
 #     elasticsearch_net:
 #         driver: bridge
 #     neo4j_net:

@@ -12,7 +12,8 @@ COPY default.conf /etc/nginx/conf.d/default.conf
 # COPY --from=build /usr/share/nginx/html /usr/share/nginx/html
 # COPY --from=build /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT [ "nginx" ]
+CMD ["-g", "daemon off;"]
 
 RUN adduser -D -H test
 WORKDIR /app

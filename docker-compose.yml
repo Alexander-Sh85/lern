@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nginx:
-    image: cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18
+    image: cr.yandex/crper7r61g5617jljv9e/nginx:${VERSION_IMAGE}
     ports: 
       - 80:80
     volumes:
@@ -23,6 +23,8 @@ services:
       retries: 3
       start_period: 60s 
     restart: always
+    networks:
+            - br_all
     # environment:
     #   - SCRAPE_URI=http://proxy:5000/nginx_status
     #   - NGINX_RETRIES=5
@@ -33,3 +35,22 @@ services:
     #   - ./nrava_secrets.yaml  
     # depends_on:
     #   - mysql
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:0.11.0
+    container_name: nginx-exporter
+    restart: always
+    depends_on:
+      - nginx
+    environment:
+      - SCRAPE_URI=http://proxy:5000/nginx_status
+      - NGINX_RETRIES=5
+    ports:
+      - 9113:9113  
+networks:
+    br_all:
+        driver: bridge
+#     elasticsearch_net:
+#         driver: bridge
+#     neo4j_net:
+#         driver: bridge

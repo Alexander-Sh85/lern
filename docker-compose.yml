@@ -2,6 +2,10 @@ version: '3.8'
 
 services:
   nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my_nginx
     image: cr.yandex/crper7r61g5617jljv9e/nginx:${VERSION_IMAGE}
     ports: 
       - 80:80
@@ -23,8 +27,9 @@ services:
       retries: 3
       start_period: 60s 
     restart: always
-    # networks:
-    #         - br_all
+    networks:
+            - br_all
+    # tty: true     
     # external_links:
     #   - localhost        
     # environment:
@@ -45,15 +50,19 @@ services:
     depends_on:
       - nginx
     environment:
-      - SCRAPE_URI=http://nginx:5000/nginx_status
+      - SCRAPE_URI=http://172.19.0.2:5000/nginx_status
       - NGINX_RETRIES=5
     ports:
       - 9113:9113 
-    # networks:
-    #         - br_all   
+    networks:
+            - br_all 
+networks:
+    br_all:
+        driver: bridge
 # networks:
-#     br_all:
-#         driver: bridge
+#   docker_net:
+#     external: true
+# docker network create --driver bridge --subnet 172.1.10.0/24 --gateway 172.1.10.1 docker_net
 #     elasticsearch_net:
 #         driver: bridge
 #     neo4j_net:

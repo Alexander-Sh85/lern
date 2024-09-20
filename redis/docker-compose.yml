@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: my_redis
+    ports:
+      - "6379:6379" # Порт, на котором будет доступен Redis
+    volumes:
+      - redis_data:/data # Хранение данных Redis
+
+  redis-cli:
+    image: redis:latest
+    container_name: my_redis_cli
+    depends_on:
+      - redis
+    entrypoint: ["redis-cli", "-h", "redis"] # Указываем, что это клиент для подключения к сервису Redis
+    stdin_open: true # Позволяет использовать интерактивный режим
+    tty: true # Позволяет использовать терминал
+
+volumes:
+  redis_data:

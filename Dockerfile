@@ -1,12 +1,16 @@
-FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18  
+FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.22.1-geoip-alpine3.14.10
 # as build это для мультистейджа
 
 # Чистим кэш в одном слое (rm -r /var/cache/apk/* or --no-cache or apk cache clean)
 RUN apk update && apk upgrade && rm -r /var/cache/apk/*
 
 COPY index.html /usr/share/nginx/html/index.html
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
+COPY whitelist.conf /etc/nginx/whitelist.conf
+
+ADD --chmod=664 https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb /usr/share/geoip/
+# ADD --chmod=664 https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb /usr/share/geoip/
 
 # FROM cr.yandex/crper7r61g5617jljv9e/nginx:1.25.3-alpine3.18
 
@@ -17,7 +21,7 @@ ENTRYPOINT [ "nginx" ]
 CMD ["-g", "daemon off;"]
 
 # RUN adduser -D -H test
-WORKDIR /app
+#WORKDIR /app
 
 # USER test
 EXPOSE 80 9113

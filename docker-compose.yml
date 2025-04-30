@@ -1,17 +1,18 @@
-version: '3.8'
-
 services:
   nginx:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: my_nginx
-    image: cr.yandex/crper7r61g5617jljv9e/nginx:${VERSION_IMAGE}
+    # image: cr.yandex/crper7r61g5617jljv9e/nginx:${VERSION_IMAGE}
     ports: 
       - 80:80
-    volumes:
-      - ./default.conf:/etc/nginx/conf.d/default.conf
-      - ./index.html:/usr/share/nginx/html/index.html
+    # volumes:
+    #   - ./default.conf:/etc/nginx/conf.d/default.conf
+    #   - ./nginx.conf:/etc/nginx/nginx.conf
+    #   - ./index.html:/usr/share/nginx/html/index.html
+      # - ./GeoLite2-City.mmdb:/usr/share/geoip/GeoLite2-City.mmdb
+      # - ./GeoLite2-Country.mmdb:/usr/share/geoip/GeoLite2-Country.mmdb
     deploy:
       resources:
         reservations:
@@ -20,12 +21,12 @@ services:
         limits:
           cpus: 0.50
           memory: 1G 
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "--quiet", "http://localhost:5000/nginx_status"]
-      interval: 5s
-      timeout: 5s
-      retries: 3
-      start_period: 60s 
+    # healthcheck:
+    #   test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "--quiet", "http://localhost:5000/nginx_status"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 60s 
     restart: always
     networks:
             - br_all
